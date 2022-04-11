@@ -2,7 +2,7 @@ from extractingComments import getVideo
 count = 0
 noComments = []
 commentsError = []
-with open('youTubeID.txt') as f:
+with open('Output/youTubeID.txt') as f:
     # print(getVideo("Fm8-ImJly1M"))
     lines = f.readlines()
     for each in lines:
@@ -25,3 +25,4 @@ with open('youTubeID.txt') as f:
 print(noComments)
 print(commentsError)
 # _3AsA3c8nkM
+

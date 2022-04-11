@@ -2,39 +2,11 @@ import csv
 import sys
 sys.path.append('/Users/abhinavreddy/PycharmProjects/youtubeScraping')
 from youtube_videos import youtube_search, video_comments
-from intoCSV import processTOCSV
+from extractTimeDuration import getDuration
+from extractingComments import getVideo
 
 
-# test = youtube_search("cognitive")
-
-# video_dict = {'youID': [], 'title': [], 'pub_date': [], 'accountName': [], 'description': [], 'link': []}
-
-# just_json = test[1]
-# print(len(just_json))
-
-
-# for video in just_json:
-#     print(video['snippet']['title'])
-
-# token = test[0]
-# youtube_search("cognitive", token=token)
-
-#  (when, who, account details, description, comment section, link)
-
-
-video_dict = {
-    'youID': [],
-    'title': [],
-    'accountName': [],
-    'pub_date': [],
-    'description': [],
-    'link': [],
-    'comments': []
-}
-
-writedata = []
-
-def grab_videos(keyword, token=None):
+def grab_videos(keyword, video_dict, comments_dict, replies_dict, users_dict, token=None):
     writeEachDict = {}
     res = youtube_search(keyword, token=token)
     token = res[0]
@@ -44,20 +16,23 @@ def grab_videos(keyword, token=None):
         # for csv
         # print(vid)
         # break
-        writeEachDict['youID'] = (vid['id']['videoId'])
-        writeEachDict['title'] = (vid['snippet']['title'])
-        # when
-        writeEachDict['pub_date'] = (vid['snippet']['publishedAt'])
-        # who
-        writeEachDict['accountName'] = (vid['snippet']['channelTitle'])
-        # description
-        writeEachDict['description'] = (vid['snippet']['description'])
-        # link
-        writeEachDict['link'] = ("https://www.youtube.com/watch?v="  + vid['id']['videoId'])
-        writedata.append(writeEachDict)
+        # writeEachDict['youID'] = (vid['id']['videoId'])
+        # writeEachDict['title'] = (vid['snippet']['title'])
+        # # when
+        # writeEachDict['pub_date'] = (vid['snippet']['publishedAt'])
+        # # who
+        # writeEachDict['accountName'] = (vid['snippet']['channelTitle'])
+        # # description
+        # writeEachDict['description'] = (vid['snippet']['description'])
+        # # link
+        # writeEachDict['link'] = ("https://www.youtube.com/watch?v="  + vid['id']['videoId'])
+        # writedata.append(writeEachDict)
 
+        # code for saving all the video details into csv
 
-        video_dict['youID'].append(vid['id']['videoId'])
+        youTubeID = vid['id']['videoId']
+
+        video_dict['youID'].append(youTubeID)
         video_dict['title'].append(vid['snippet']['title'])
         # when
         video_dict['pub_date'].append(vid['snippet']['publishedAt'])
@@ -67,37 +42,38 @@ def grab_videos(keyword, token=None):
         video_dict['description'].append(vid['snippet']['description'])
         # link
         video_dict['link'].append("https://www.youtube.com/watch?v=" + vid['id']['videoId'])
-        # comments (need to trim as the data is huge)
-        # video_dict['comments'].append(video_comments(vid['id']['videoId']))
+        # duration
+        video_dict['duration'].append(getDuration(youTubeID))
+        # get all stats
+        commentsAll, TotalComments, count_Replies, length_of_comments = getVideo(youTubeID)
+        video_dict['TotalComments'].append(TotalComments)
+        video_dict['Avglength'].append(length_of_comments)
+        video_dict['TotalReplies'].append(count_Replies)
 
-        # print(vid['snippet']['channelTitle'])
-        # exit()
+        # code for saving all the comments into one csv
 
-    print("added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID'])))
-    return token
+        comments_dict['youID'].append(youTubeID)
+        comments_dict['comments']
+
+
+
+    # print("added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID'])))
+    return token, video_dict, comments_dict, replies_dict, users_dict
+
+
 # (toddler | kid) (Physical | Cognitive | Emotional | Social and Language | Sensory and Motor skills) (Development)
-search_word = "child Physical Development"
+# search_word = "child Physical Development"
 
-token = grab_videos(search_word)
-while token != "last_page":
-    # print(token)
-    token = grab_videos(search_word, token=token)
+def getYouTubeData(search_word, video_dict, comments_dict, replies_dict, users_dict):
+    token, video_dict, comments_dict, replies_dict, users_dict = \
+        grab_videos(search_word, video_dict, comments_dict, replies_dict, users_dict, token=None)
+    while token != "last_page":
+        # print(token)
+        token, video_dict, comments_dict, replies_dict, users_dict = \
+            grab_videos(search_word, video_dict, comments_dict, replies_dict, users_dict, token=token)
+    return video_dict, comments_dict, replies_dict, users_dict
 
 # processTOCSV(video_dict)
 
-
-
 # print(video_dict)
-# fields = ['youID', 'title', 'accountName', 'pub_date', 'description', 'link']
-
-# with open("YouTube_Data.csv", 'w') as csvfile:
-#     # creating a csv dict writer object
-#     writer = csv.DictWriter(csvfile, fieldnames=fields)
-#
-#     # writing headers (field names)
-#     writer.writeheader()
-#
-#     # writing data rows
-#     writer.writerows(writedata)
-
 

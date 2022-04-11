@@ -7,7 +7,7 @@ commentsAll = []
 # repliesAll = []
 
 
-def video_comments(video_id, token= None):
+def video_comments(video_id, count_Comments, count_Replies, length_of_Comments, token=None):
     # empty list for storing reply
     replies = []
 
@@ -30,18 +30,23 @@ def video_comments(video_id, token= None):
         # extracting required info
         # from each result object
         for item in video_response['items']:
-            # print(item)
+            count_Comments += 1
+            # print(count_Comments, item['snippet']['topLevelComment']['snippet']['textDisplay'])
+            print(item)
             # break
             commentDict = {}
             # Extracting comments
+            comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
+            length_of_Comments += len(comment)
+
             commentDict["comment"] = item['snippet']['topLevelComment']['snippet']['textDisplay']
             commentDict["likeCount"] = item['snippet']['topLevelComment']['snippet']['likeCount']
             commentDict["publishedAt"] = item['snippet']['topLevelComment']['snippet']["publishedAt"]
 
+            # counting number of replies for each comment
 
-            # counting number of reply of comment
             replycount = item['snippet']['totalReplyCount']
-
+            count_Replies += replycount
             # if reply is there
             if replycount > 0:
                 repliesDict = {}
@@ -59,41 +64,34 @@ def video_comments(video_id, token= None):
                 commentDict["replies"] = replies
 
             commentsAll.append(commentDict)
-            # commentsAll.append((comment, replies))
-            # print comment with list of reply
-            # print(comment, replies, end='\n\n')
-            # empty reply list
             replies = []
 
-        # Again repeat
-        # if 'nextPageToken' in video_response:
-        #     video_response = youtube.commentThreads().list(
-        #         part='snippet,replies',
-        #         videoId=video_id
-        #     ).execute()
-        # else:
-        #     break
-        return token
+        return token, count_Comments, count_Replies, length_of_Comments
 
 
-# videoID = "Fm8-ImJly1M"
+videoID = "Fm8-ImJly1M"
 
 # method to pass every video and get comments and replies to each comments
 def getVideo(videoID):
-    token = video_comments(videoID)
-    # print(token)
+    count_Comments = 0
+    count_Replies = 0
+    length_of_Comments = 0
+    length_of_Replies = 0
+
+    token, count_Comments, count_Replies, length_of_Comments = \
+        video_comments(videoID, count_Comments, count_Replies, length_of_Comments)
+
     while token != "last_page" and token is not None:
+        # count_Comments += 1
         if token is not None:
-            token = video_comments(videoID, token=token)
-    # print(commentsAll)
-    return commentsAll
+            token, count_Comments, count_Replies, length_of_Comments = \
+                video_comments(videoID, count_Comments, count_Replies, length_of_Comments, token=token)
+    # print(count_Comments, count_Replies, round(length_of_Comments/count_Comments, 2))
+    return commentsAll, count_Comments, count_Replies, round(length_of_Comments/count_Comments, 2)
 
-# youTubeID = "_-P0WA2sCZM"
-# result = getVideo(youTubeID)
+# videoID = "_-P0WA2sCZM"
+result = getVideo(videoID)
 
-#
+
 # print(result)
-# f = open("./CommentsFile/youtube_"+youTubeID+".txt", "w+")
-# f.write(str(result))
-
 

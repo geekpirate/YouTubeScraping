@@ -1,10 +1,11 @@
 import csv
-import youtube
+
 
 def processTOCSV(data):
     # data = youtube.youTubeDic
 
-    fields = ['youID', 'title', 'accountName', 'pub_date', 'description', 'link']
+    fields = ['youID', 'title', 'accountName', 'pub_date', 'description', 'link', 'duration', 'TotalComments',
+              'Avglength', 'TotalReplies']
     writedata = []
 
     for i in range(len(data['youID'])):
@@ -19,9 +20,17 @@ def processTOCSV(data):
         writeEachDict['description'] = data['description'][i]
         # link
         writeEachDict['link'] = data['link'][i]
+        # duration
+        writeEachDict['duration'] = data['duration'][i]
+        # storing all the stats
+        writeEachDict['TotalComments'] = data['TotalComments'][i]
+        writeEachDict['Avglength'] = data['Avglength'][i]
+        writeEachDict['TotalReplies'] = data['TotalReplies'][i]
+
+
         writedata.append(writeEachDict)
 
-    with open("AllData/YouTube_Data_12.csv", 'w') as csvfile:
+    with open("AllData/combined_YouTube_Data.csv", 'w') as csvfile:
         # creating a csv dict writer object
         writer = csv.DictWriter(csvfile, fieldnames=fields)
 
