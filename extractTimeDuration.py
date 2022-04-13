@@ -6,15 +6,18 @@ from convertDurationToSeconds import convert_YouTube_duration_to_seconds
 
 
 def getDuration(youTubeID):
+    print("log: starting getDuration")
     url = "https://www.googleapis.com/youtube/v3/videos?id=" + youTubeID + \
-          "&part=contentDetails&key=AIzaSyBVQTVMsO5b8hTPN8I72y_3NBRsCxcizik"
+          "&part=contentDetails&key=AIzaSyCdeloVdg_LCBau0DbT9WrgRUVzkjVj9DI"
     r = requests.get(url)
     files = r.json()
     try:
         duration = convert_YouTube_duration_to_seconds(files["items"][0]["contentDetails"]["duration"])
     except:
+        print("log: ending getDuration with error")
         return 0
     else:
+        print("log: ending getDuration")
         return duration
 
 #

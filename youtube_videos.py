@@ -4,8 +4,11 @@ from oauth2client.tools import argparser
 
 # DEVELOPER_KEY = "AIzaSyDGz5l3i8D7Gtw98BCxtGzPnDOmGAMZ0Uc"
 # AIzaSyBVQTVMsO5b8hTPN8I72y_3NBRsCxcizik
+# AIzaSyC7dgi_SUM_YevuSd3hiORzOR1Aw_jXjiE
+# AIzaSyAT_uqakpM81WtoP3umkFz1rQ8TrSqSP_Q
+# AIzaSyCdeloVdg_LCBau0DbT9WrgRUVzkjVj9DI
 
-DEVELOPER_KEY = "AIzaSyBVQTVMsO5b8hTPN8I72y_3NBRsCxcizik"
+DEVELOPER_KEY = "AIzaSyCdeloVdg_LCBau0DbT9WrgRUVzkjVj9DI"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 

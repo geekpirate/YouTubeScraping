@@ -7,6 +7,7 @@ from extractingComments import getVideo
 
 
 def grab_videos(keyword, video_dict, comments_dict, replies_dict, users_dict, token=None):
+    print("log: starting grab_videos")
     writeEachDict = {}
     res = youtube_search(keyword, token=token)
     token = res[0]
@@ -45,18 +46,13 @@ def grab_videos(keyword, video_dict, comments_dict, replies_dict, users_dict, to
         # duration
         video_dict['duration'].append(getDuration(youTubeID))
         # get all stats
-        commentsAll, TotalComments, count_Replies, length_of_comments = getVideo(youTubeID)
+        comments_dict, TotalComments, count_Replies, length_of_comments, replies_dict, users_dict = \
+            getVideo(youTubeID, comments_dict, replies_dict, users_dict)
         video_dict['TotalComments'].append(TotalComments)
         video_dict['Avglength'].append(length_of_comments)
         video_dict['TotalReplies'].append(count_Replies)
 
-        # code for saving all the comments into one csv
-
-        comments_dict['youID'].append(youTubeID)
-        comments_dict['comments']
-
-
-
+    print("log: ending grab_videos")
     # print("added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID'])))
     return token, video_dict, comments_dict, replies_dict, users_dict
 
@@ -65,12 +61,14 @@ def grab_videos(keyword, video_dict, comments_dict, replies_dict, users_dict, to
 # search_word = "child Physical Development"
 
 def getYouTubeData(search_word, video_dict, comments_dict, replies_dict, users_dict):
+    print("log: starting getYouTubeData")
     token, video_dict, comments_dict, replies_dict, users_dict = \
         grab_videos(search_word, video_dict, comments_dict, replies_dict, users_dict, token=None)
     while token != "last_page":
         # print(token)
         token, video_dict, comments_dict, replies_dict, users_dict = \
             grab_videos(search_word, video_dict, comments_dict, replies_dict, users_dict, token=token)
+    print("log: ending getYouTubeData")
     return video_dict, comments_dict, replies_dict, users_dict
 
 # processTOCSV(video_dict)
