@@ -2,13 +2,12 @@ import csv
 import json
 import requests
 from convertDurationToSeconds import convert_YouTube_duration_to_seconds
-# https://www.googleapis.com/youtube/v3/videos?id=xZyzWjyj1Vc&part=contentDetails&key=AIzaSyBVQTVMsO5b8hTPN8I72y_3NBRsCxcizik"
 
 
 def getDuration(youTubeID):
     print("log: starting getDuration")
     url = "https://www.googleapis.com/youtube/v3/videos?id=" + youTubeID + \
-          "&part=contentDetails&key=AIzaSyCdeloVdg_LCBau0DbT9WrgRUVzkjVj9DI"
+          "&part=contentDetails&key=Your_API_KEY"
     r = requests.get(url)
     files = r.json()
     try:
